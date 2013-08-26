@@ -1,5 +1,17 @@
 # Create your views here.
 from django.http import HttpResponse
+from polls.models import Poll
 
 def index(request):
-    return HttpResponse("Hello World. You're at the poll index.")
+    latest_poll_list = Poll.objects.order_by('-pub_date')[:5]
+    output = ', '.join([p.question for p in latest_poll_list])
+    return HttpResponse(output)
+
+def detail(request, poll_id):
+    return HttpResponse("You're looing at poll {0}".format(poll_id))
+
+def results(request, poll_id):
+    return HttpResponse("You're looking at the result sof poll {0}".format(poll_id))
+
+def vote(request, poll_id):
+    return HttpResponse("You're voting on poll {0}".format(poll_id))
