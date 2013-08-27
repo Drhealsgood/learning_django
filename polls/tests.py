@@ -21,10 +21,16 @@ class SimpleTest(TestCase):
         
 class PollMethodTests(TestCase):
     
-    def test_was_published_recently_with_future_poll(self):
+    def test_was_published_recently(self):
         """
         was_published_recently() should return False for polls whose
-        pub_date is in the future
+        pub_date is in the future, or more than a day in the past
         """
-        future_poll = Poll(pub_date=timezone.now() + datetime.timedelta(days=30))
-        self.assertEqual(future_poll.was_published_recently(), False)
+        days = [30,0.1,-1.1,-2,-5,-10]
+        for d in days: 
+            future_poll = Poll(pub_date=timezone.now() + datetime.timedelta(days=d))
+            self.assertFalse(future_poll.was_published_recently(),"Expected False for {0}".format(d))
+        days = [-0.1,-0.5,-0.9,-1]
+        for d in days:
+            future_poll = Poll(pub_date=timezone.now() + datetime.timedelta(days=d))
+            self.assertTrue(future_poll.was_published_recently(),"Expected True for {0}".format(d))

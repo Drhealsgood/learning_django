@@ -7,8 +7,8 @@ class Poll(models.Model):
     pub_date = models.DateTimeField('date published')
     
     def was_published_recently(self):
-        return (self.pub_date >= timezone.now() - datetime.timedelta(days=1)) and (
-                self.pub_date <= timezone.now() + datetime.timedelta(days=1))
+        now = timezone.now()
+        return now - datetime.timedelta(days=1.01) <= self.pub_date < now
     
     def __unicode__(self):
         return self.question
